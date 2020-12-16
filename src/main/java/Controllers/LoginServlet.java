@@ -20,6 +20,23 @@ public class LoginServlet extends HttpServlet {
 
         String action = request.getParameter("action") == null ? "login" : request.getParameter("action");
 
+        HttpSession session = request.getSession();
+
+        String correo = request.getParameter("inputEmail");
+        String pass = request.getParameter("inputPassword");
+
+        user= du.buscarCliente(correo, pass);
+
+
+        if (user.getNombre()!=null) {
+            HttpSession session = request.getSession();
+            session.setAttribute("usuarioSession", user);
+            response.sendRedirect(request.getContextPath()+"/Lab10Servlet?action=vista");
+        } else {
+            response.sendRedirect(request.getContextPath() + "/Lab10Servlet?error");
+
+        }
+
 
         switch (action) {
             case "login":
