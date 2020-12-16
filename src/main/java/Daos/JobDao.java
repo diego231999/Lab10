@@ -1,5 +1,6 @@
 package Daos;
 
+import Beans.Employee;
 import Beans.Job;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -118,10 +119,25 @@ public class JobDao extends DaoBase {
     public int obtenerMaxSalary(int employeeId) {
 
         int maxSalary = 0;
+        EmployeeDao ed=new EmployeeDao();
+        Employee employee = new Employee();
+        employee=ed.obtenerEmpleado(employeeId);
 
-                /*
-                Inserte su código aquí
-                 */
+        String sql = "select max_salary from jobs where job_id=?";
+        try (Connection conn = this.getConection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+
+            pstmt.setString(1, employee.getJob().getJobId());
+            pstmt.executeQuery();
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    maxSalary=rs.getInt(1);
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
         return maxSalary;
     }
 

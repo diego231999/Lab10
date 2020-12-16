@@ -195,11 +195,23 @@ public class EmployeeDao extends DaoBase {
 
     public Employee validarUsuarioPasswordHash(String username, String password) {
 
-        Employee employee = null;
+        Employee employee = new Employee();
+        String sql = "select * from employees_credentials where email=? and password_hashed =sha2(?,256);";
+        try (Connection conn = this.getConection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-                /*
-                Inserte su código aquí
-                 */
+            pstmt.setString(1, username);
+            pstmt.setString(2, password);
+            pstmt.executeQuery();
+
+            try (ResultSet rs = pstmt.executeQuery()) {
+                if (rs.next()) {
+                    employee.setEmployeeId(rs.getInt(1));
+                }
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
 
         return employee;
     }
