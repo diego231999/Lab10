@@ -16,7 +16,7 @@ public abstract class DaoBase {
         } catch (ClassNotFoundException ex) {
 //            Logger.getLogger(EmployeeServlet.class.getName()).log(Level.SEVERE, null, ex);
         }
-
+        //HOLA XD
         String username = "root";
         String password = "root";
         String database = "hr";
