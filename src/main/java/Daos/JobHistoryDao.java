@@ -3,10 +3,10 @@ package Daos;
 import Beans.Department;
 import Beans.Job;
 import Beans.JobHistory;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import Dtos.EmpleadosPorRegionDto;
+import Dtos.JobHistoryDto;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,10 +21,31 @@ public class JobHistoryDao extends DaoBase {
 
         ArrayList<JobHistory> lista = new ArrayList<>();
 
-         /*
-                Inserte su código aquí
-                 */
 
+        String sql = "select jh.start_date, jh.end_date, j.job_title, d.department_name \n" +
+                "from job_history jh\n" +
+                "INNER JOIN departments d ON jh.department_id  = d.department_id\n" +
+                "INNER JOIN jobs j ON jh.job_id = j.job_id\n" +
+                "where jh.employee_id=? \n" +
+                "ORDER BY jh.start_date ASC;";
+
+        try (Connection conn = getConection();
+             PreparedStatement pstmt = conn.prepareStatement(sql)) {
+            pstmt.setString(1, employeeId);
+
+            try (ResultSet rs = pstmt.executeQuery()){
+                while (rs.next()) {
+                    JobHistoryDto jobHistory = new JobHistoryDto();
+                    jobHistory.setStartDate(rs.getString(1));
+                    jobHistory.setEndDate(rs.getString(2));
+                    jobHistory.setJobTitle(rs.getString(3));
+                    jobHistory.setDepartment(rs.getString(4));
+                    lista.add(jobHistory);
+                }
+            }
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return lista;
     }
 

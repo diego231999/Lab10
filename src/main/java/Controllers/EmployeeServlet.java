@@ -105,6 +105,7 @@ public class EmployeeServlet extends HttpServlet {
 
             RequestDispatcher view;
             Employee employee;
+            JobHistoryDao jobHistoryDao = new JobHistoryDao();
             EmployeeDao employeeDao = new EmployeeDao();
             DepartmentDao departmentDao = new DepartmentDao();
             JobDao jobDao = new JobDao();
@@ -136,9 +137,7 @@ public class EmployeeServlet extends HttpServlet {
 
                             if (emp != null) {
                                 request.setAttribute("empleado", emp);
-                                /*
-                                Inserte su código aquí
-                                 */
+                                request.setAttribute("jobHistory",jobHistoryDao.listarJobHistories(employeeId));
 
                                 view = request.getRequestDispatcher("employees/formularioEditar.jsp");
                                 view.forward(request, response);
