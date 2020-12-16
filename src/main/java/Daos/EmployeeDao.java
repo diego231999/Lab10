@@ -4,21 +4,13 @@ import Beans.Department;
 import Beans.Employee;
 import Beans.Job;
 import Dtos.EmpleadosPorRegionDto;
-import java.nio.charset.StandardCharsets;
-import java.security.MessageDigest;
-import java.security.NoSuchAlgorithmException;
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
-import java.sql.Types;
+
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author DTI
  */
 public class EmployeeDao extends DaoBase {
@@ -201,7 +193,6 @@ public class EmployeeDao extends DaoBase {
     }
 
 
-
     public Employee validarUsuarioPasswordHash(String username, String password) {
 
         Employee employee = new Employee();
@@ -226,12 +217,29 @@ public class EmployeeDao extends DaoBase {
     }
 
     public ArrayList<EmpleadosPorRegionDto> listaEmpleadosPorRegion() {
-
         ArrayList<EmpleadosPorRegionDto> lista = new ArrayList<>();
 
-        /*
-                Inserte su código aquí
-                 */
+        String sql = "SELECT r.region_name, count(c.country_id) \n" +
+                "FROM employees e\n" +
+                "INNER JOIN departments d ON e.department_id = d.department_id\n" +
+                "INNER JOIN locations l ON l.location_id = d.location_id\n" +
+                "INNER JOIN countries c ON c.country_id = l.country_id\n" +
+                "INNER JOIN regions r ON c.region_id = r.region_id\n" +
+                "GROUP BY r.region_id;";
+
+        try (Connection conn = getConection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                EmpleadosPorRegionDto employee = new EmpleadosPorRegionDto();
+                employee.setNombreRegion(rs.getString(1));
+                employee.setCantidadEmpleados(rs.getInt(2));
+                lista.add(employee);
+            }
+
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return lista;
     }
 }

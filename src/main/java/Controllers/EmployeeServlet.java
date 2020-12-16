@@ -106,6 +106,7 @@ public class EmployeeServlet extends HttpServlet {
             RequestDispatcher view;
             Employee employee;
             EmployeeDao employeeDao = new EmployeeDao();
+            DepartmentDao departmentDao = new DepartmentDao();
             JobDao jobDao = new JobDao();
 
             switch (action) {
@@ -171,9 +172,11 @@ public class EmployeeServlet extends HttpServlet {
 
                     break;
                 case "est":
-                     /*
-                Inserte su código aquí
-                 */
+                    request.setAttribute("listaEmpRegion",employeeDao.listaEmpleadosPorRegion());
+                    request.setAttribute("listaSalario",departmentDao.listaSalarioPorDepartamento());
+
+                    view = request.getRequestDispatcher("employees/estadisticas.jsp");
+                    view.forward(request,response);
                     break;
         }
     }

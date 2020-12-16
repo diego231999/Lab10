@@ -1,6 +1,7 @@
 package Daos;
 
 import Beans.Department;
+import Dtos.EmpleadosPorRegionDto;
 import Dtos.SalarioPorDepartamentoDto;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -120,11 +121,27 @@ public class DepartmentDao extends DaoBase {
     public ArrayList<SalarioPorDepartamentoDto> listaSalarioPorDepartamento() {
 
         ArrayList<SalarioPorDepartamentoDto> lista = new ArrayList<>();
+        String sql = "SELECT department_name, min(salary), max(salary), truncate(avg(salary),2)\n" +
+                "FROM departments d \n" +
+                "INNER JOIN employees e ON e.department_id = d.department_id\n" +
+                "GROUP BY d.department_name\n" +
+                "ORDER BY department_name\n";
 
-        /*
-                Inserte su código aquí
-                 */
+        try (Connection conn = getConection();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(sql)) {
+            while (rs.next()) {
+                SalarioPorDepartamentoDto salario = new SalarioPorDepartamentoDto();
+                salario.setNombreDepartamento(rs.getString(1));
+                salario.setSalarioMinimo(rs.getBigDecimal(2));
+                salario.setSalarioMaximo(rs.getBigDecimal(3));
+                salario.setSalarioPromedio(rs.getBigDecimal(4));
+                lista.add(salario);
+            }
 
+        } catch (SQLException throwables) {
+            throwables.printStackTrace();
+        }
         return lista;
     }
 
