@@ -10,6 +10,7 @@
         <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse justify-content-end" id="navbarSupportedContent">
+        if(
         <ul class="navbar-nav">
             <li class="nav-item <%=currentPage.equals("cou") ? "active" : ""%>" >                
                 <a class="nav-link" href="<%=request.getContextPath()%>/CountryServlet">Country</a>

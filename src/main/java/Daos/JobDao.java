@@ -123,21 +123,16 @@ public class JobDao extends DaoBase {
         Employee employee = new Employee();
         employee=ed.obtenerEmpleado(employeeId);
 
-        String sql = "select e.department_id,department_name,max(salary)\n" +
-                "from departments d \n" +
-                "inner join employees e on e.department_id = d.department_id\n" +
-                "where e.department_id=?" +
-                "group by d.department_name\n" +
-                "order by department_name";
+        String sql = "select max_salary from jobs where job_id=?";
         try (Connection conn = this.getConection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
 
-            pstmt.setInt(1, employee.getDepartment().getDepartmentId());
+            pstmt.setString(1, employee.getJob().getJobId());
             pstmt.executeQuery();
 
             try (ResultSet rs = pstmt.executeQuery()) {
                 if (rs.next()) {
-                    maxSalary=rs.getInt(3);
+                    maxSalary=rs.getInt(1);
                 }
             }
         } catch (SQLException e) {

@@ -28,32 +28,34 @@ public class LoginServlet extends HttpServlet {
         String pass = request.getParameter("inputPassword");
 
         employee = ed.validarUsuarioPasswordHash(correo, pass);
-        System.out.println(employee.getEmployeeId());
+
 
         if (employee.getEmployeeId() != 0) {
             int max_salary=jd.obtenerMaxSalary(employee.getEmployeeId());
             System.out.println(max_salary);
             HttpSession session = request.getSession();
+            Employee employee2;
+            employee2=ed.obtenerEmpleado(employee.getEmployeeId());
 
             if(max_salary>15000){
-                session.setAttribute("employeeSession", employee);
+                session.setAttribute("employeeSession", employee2);
                 session.setAttribute("rol","Top1");
                 response.sendRedirect(request.getContextPath() + "/EmployeeServlet");
             }else if(max_salary>8500 && max_salary<=15000){
-                session.setAttribute("employeeSession", employee);
+                session.setAttribute("employeeSession", employee2);
                 session.setAttribute("rol","Top2");
                 response.sendRedirect(request.getContextPath() + "/JobServlet");
             }else if(max_salary>5000 && max_salary<=8500){
-                session.setAttribute("employeeSession", employee);
+                session.setAttribute("employeeSession", employee2);
                 session.setAttribute("rol","Top3");
                 response.sendRedirect(request.getContextPath() + "/DepartmentServlet");
             }else if (max_salary<=5000){
-                session.setAttribute("employeeSession", employee);
+                session.setAttribute("employeeSession", employee2);
                 session.setAttribute("rol","Top4");
                 response.sendRedirect(request.getContextPath() + "/CountryServlet");
             }
         } else {
-            response.sendRedirect(request.getContextPath() + "/LoginServlet");
+            response.sendRedirect(request.getContextPath());
 
         }
 
@@ -66,10 +68,11 @@ public class LoginServlet extends HttpServlet {
 
         switch (action) {
             case "logout":
-                /*
-                Inserte su código aquí
-                 */
+                HttpSession session = request.getSession();
+                session.invalidate();
+                response.sendRedirect(request.getContextPath());
                 break;
+
         }
     }
 }
