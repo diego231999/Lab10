@@ -1,10 +1,11 @@
 <%@page import="java.util.ArrayList"%>
 <%@page import="Beans.JobHistory"%>
 <%@page import="Beans.Employee"%>
+<%@ page import="Dtos.JobHistoryDto" %>
 <%@page contentType="text/html" pageEncoding="UTF-8"%>
 <jsp:useBean id="empleado" type="Employee" scope="request" />
 <%
-    ArrayList<JobHistory> listaJobHistory = (ArrayList<JobHistory>) request.getAttribute("jobHistory");
+    ArrayList<JobHistoryDto> listaJobHistory = (ArrayList<JobHistoryDto>) request.getAttribute("jobHistory");
 %>
 
 <!DOCTYPE html>
@@ -91,13 +92,13 @@
                 <tbody>
                 <%
                     int i = 1;
-                    for (JobHistory jH : listaJobHistory) {
+                    for (JobHistoryDto jH : listaJobHistory) {
                 %>
                 <tr>
                     <td><%= i %></td>
                     <td><%= jH.getStartDate() %></td>
                     <td><%= jH.getEndDate() %></td>
-                    <td><%= jH.getJob() %></td>
+                    <td><%= jH.getJobTitle() %></td>
                     <td><%= jH.getDepartment() %></td>
                 </tr>
                 <% i++;

@@ -17,9 +17,9 @@ import java.util.logging.Logger;
  */
 public class JobHistoryDao extends DaoBase {
 
-    public ArrayList<JobHistory> listarJobHistories(int employeeId) {
+    public ArrayList<JobHistoryDto> listarJobHistories(int employeeId) {
 
-        ArrayList<JobHistory> lista = new ArrayList<>();
+        ArrayList<JobHistoryDto> lista = new ArrayList<>();
 
 
         String sql = "select jh.start_date, jh.end_date, j.job_title, d.department_name \n" +
@@ -31,7 +31,7 @@ public class JobHistoryDao extends DaoBase {
 
         try (Connection conn = getConection();
              PreparedStatement pstmt = conn.prepareStatement(sql)) {
-            pstmt.setString(1, employeeId);
+            pstmt.setInt(1, employeeId);
 
             try (ResultSet rs = pstmt.executeQuery()){
                 while (rs.next()) {
