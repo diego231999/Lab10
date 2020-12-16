@@ -1,12 +1,15 @@
 package Daos;
 
 import Beans.Location;
+import Dtos.EmpleadosPorRegionDto;
+
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.EnumMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -122,5 +125,7 @@ public class LocationDao extends DaoBase {
             Logger.getLogger(LocationDao.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
+
+
 }
 
